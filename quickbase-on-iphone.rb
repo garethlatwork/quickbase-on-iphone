@@ -119,7 +119,7 @@ get '/report' do
         if clist
            clist.split(/\./).each{|c| fieldNames << qbc.lookupFieldNameFromID(c)}
         else
-          fieldNames = qbc.getFieldNames(params[:qid])
+          fieldNames = qbc.getFieldNames(params[:dbid])
         end  
         
         last_index = fieldNames.length-1
@@ -167,6 +167,9 @@ get '/report' do
     redirect '/login'
   end  
 end
+
+def report_record_details(record, fieldNames)
+end  
 
 get '/login_error' do
   haml :login_error
@@ -232,6 +235,8 @@ __END__
   %body<
     .toolbar
       %h1{ :id => "pageTitle" } 
+      %a{ :id => "actionbutton", :class => "button", :href => "/login", :target => "_self" }
+        Login
     %ul{ :id => "main_menu", :title => "Main Menu", :selected => "true" }
       %li
         ! <a href="/list_apps?#{@param_url}" target="_self" >List Applications</a>
@@ -300,6 +305,10 @@ __END__
         Tables
     #{@records}
 
+@@ report_record_detail
+  %ul{ :id => #{@report_record_detail_id}, :title => #{@report_record_detail_title} }
+    #{@report_record_detail_fields}
+    
 @@ login_error
 %html<
   %head< 
