@@ -109,6 +109,7 @@ get '/report' do
     begin
       qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
       if qbc.requestSucceeded
+        @record_details = ""
         @records = "<div id=\"report\" title=\"#{params[:table_name]}: #{params[:report_name]}\" class=\"panel\" selected=\"true\">"
         @records << "<table class=\"itable\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr class=\"header\">"
         
@@ -136,6 +137,7 @@ get '/report' do
         @records << "</tr>"
         records = qbc.getRecordsArray(params[:dbid], fieldNames, nil, params[:qid])
         alt = false
+        record_id = 1
         records.each{|record|
           if alt
             @records << "<tr class=\"alt\">"
@@ -144,7 +146,7 @@ get '/report' do
           end  
           fieldNames.each_index{|i|
              if i == 0
-                @records << "<td class=\"first\">#{record[fieldNames[i]]}</td>"
+                @records << "<td class=\"first\"><a href=\"##{record_id}\"> #{record[fieldNames[i]]}</a></td>"
              elsif i == last_index
                 @records << "<td class=\"last\">#{record[fieldNames[i]]}</td>"
              else  
@@ -153,6 +155,8 @@ get '/report' do
             alt = !alt  
           }
           @records << "</tr>"
+          @record_details << report_record_details(record_id, record, fieldNames)
+          record_id += 1
         }
         @records << "</table></div>"
         haml :report
@@ -168,7 +172,14 @@ get '/report' do
   end  
 end
 
-def report_record_details(record, fieldNames)
+def report_record_details(record_id, record, fieldNames)
+  @report_record_detail_id = record_id
+  @report_record_detail_title = "Record ##{record_id}"
+  @report_record_detail_fields = ""
+  fieldNames.each_index{|i|
+    @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{record[fieldNames[i]]}</li>"
+  }
+  haml :report_record_detail
 end  
 
 get '/login_error' do
@@ -304,11 +315,12 @@ __END__
       %a{ :id => "actionbutton", :class => "button", :href => "#{@tables_url}", :target => "_self" }
         Tables
     #{@records}
+    #{@record_details}
 
 @@ report_record_detail
-  %ul{ :id => #{@report_record_detail_id}, :title => #{@report_record_detail_title} }
-    #{@report_record_detail_fields}
-    
+%ul{ :id => "#{@report_record_detail_id}", :title => "#{@report_record_detail_title}" }
+  #{@report_record_detail_fields}
+
 @@ login_error
 %html<
   %head< 
