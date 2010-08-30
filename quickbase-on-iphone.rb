@@ -306,6 +306,7 @@ __END__
       \.itable td	{ border-right: 1px solid gray; }
       \.itable tr:first-child { white-space: nowrap; }
       \.itable tr:last-child { border-right: none; }
+      li > label { font-weight: bold; color: #880000; }
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
