@@ -24,6 +24,7 @@ def main_menu(params)
      @param_url = "username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}"
      qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm})
      if qbc.requestSucceeded
+        @about = haml :about
         haml :main_menu
      else
         haml :login_error
@@ -242,16 +243,22 @@ __END__
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
+      li > label { font-weight: bold; color: #880000; }
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
       %h1{ :id => "pageTitle" } 
+      %a{ :id => "backButton", :class => "button", :href => "#" }
       %a{ :id => "actionbutton", :class => "button", :href => "/login", :target => "_self" }
         Login
     %ul{ :id => "main_menu", :title => "Main Menu", :selected => "true" }
       %li
         ! <a href="/list_apps?#{@param_url}" target="_self" >List Applications</a>
-
+      %li
+        %a{ :href => "#about"}
+          About QuickBase on iPhone
+    #{@about}
+      
 @@ app_list
 %html<
   %head< 
@@ -340,3 +347,40 @@ __END__
       %li 
         %a{ :href => '/login' } 
           Please enter a valid QuickBase username and password.
+
+@@ about
+%ul{ :id => "about", :title => "About QuickBase on iPhone" }
+  %li 
+    %label<
+      Author:
+    Gareth Lewis  
+  %li 
+    %label<
+      Programming languages:
+    %a{ :href => 'http://www.ruby-lang.org' } 
+      Ruby, Javascript  
+  %li 
+    %label<
+      UI library:
+    %a{ :href => 'http://code.google.com/p/iui' } 
+      iUI
+  %li 
+    %label<
+      Web application framework:
+    %a{ :href => 'http://www.sinatrarb.com' } 
+      Sinatra
+  %li 
+    %label<
+      QuickBase API library:
+    %a{ :href => 'https://code.intuit.com/sf/wiki/do/viewPage/projects.ipp_dev_kits/wiki/RubyDevKit' } 
+      Ruby SDK
+  %li 
+    %label<
+      HTML rendering:
+    %a{ :href => 'http://haml-lang.com' } 
+      Haml
+  %li 
+    %label<
+      Server platform:
+    %a{ :href => 'http://heroku.com' } 
+      Heroku
