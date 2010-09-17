@@ -2,6 +2,10 @@ require 'sinatra'
 require 'QuickBaseClient'
 require 'haml'
 
+not_found do
+  haml :not_found
+end
+
 get '/' do
   haml :login
 end  
@@ -189,6 +193,23 @@ end
 
 
 __END__
+
+@@ not_found
+%html<
+  %head< 
+    %title
+      QuickBase on iPhone
+    %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
+    %style{ :type => "text/css", :media => "screen" } 
+      @import "/iui/iui.css";
+    %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
+  %body<
+    .toolbar
+      %h1{ :id => "pageTitle" }
+      %a{ :id => "backButton", :class => "button", :href => "#" }
+    %ul{ :id => "not_found", :title => "Sorry: not found" , :selected=> "true" }
+      %li 
+        Sorry. That page is not valid on this website.
 
 @@ quickbase_error
 %html<
