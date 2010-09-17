@@ -7,10 +7,12 @@ not_found do
 end
 
 get '/' do
+  expires -1, :public, :must_revalidate
   haml :login
 end  
 
 get '/login' do
+  expires -1, :public, :must_revalidate
   haml :login
 end  
 
