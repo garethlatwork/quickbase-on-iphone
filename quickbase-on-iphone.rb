@@ -200,7 +200,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone
+      QuickBase on iPhone - Page Not Found
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -217,7 +217,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone
+      QuickBase on iPhone - QuickBase Error
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -234,7 +234,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone
+      QuickBase on iPhone - Login
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -262,7 +262,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone
+      QuickBase on iPhone - Main Menu
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -286,7 +286,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone
+      QuickBase on iPhone - Apps
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -304,7 +304,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone
+      QuickBase on iPhone - Tables
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -322,7 +322,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone
+      QuickBase on iPhone - Report
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -356,7 +356,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone
+      QuickBase on iPhone - Login Error
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
