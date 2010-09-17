@@ -149,9 +149,9 @@ get '/report' do
              if i == 0
                 @records << "<td class=\"first\"><a href=\"##{record_id}\"> #{record[fieldNames[i]]}</a></td>"
              elsif i == last_index
-                @records << "<td class=\"last\">#{record[fieldNames[i]]}</td>"
+                @records << "<td class=\"last\"><a href=\"##{record_id}\">#{record[fieldNames[i]]}</a></td>"
              else  
-                @records << "<td>#{record[fieldNames[i]]}</td>"
+                @records << "<td><a href=\"##{record_id}\">#{record[fieldNames[i]]}</a></td>"
               end  
             alt = !alt  
           }
