@@ -207,7 +207,7 @@ __END__
     .toolbar
       %h1{ :id => "pageTitle" }
       %a{ :id => "backButton", :class => "button", :href => "#" }
-    %ul{ :id => "not_found", :title => "Sorry: not found" , :selected=> "true" }
+    %ul{ :id => "not_found", :title => "Invalid Page" , :selected=> "true" }
       %li 
         Sorry. That page is not valid on this website.
 
