@@ -2,6 +2,10 @@ require 'sinatra'
 require 'QuickBaseClient'
 require 'haml'
 
+configure do
+  disable :logging
+end
+
 not_found do
   haml :not_found
 end
