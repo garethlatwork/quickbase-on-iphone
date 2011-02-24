@@ -1,3 +1,5 @@
 sinatra
 haml
 httpclient
+quickbase_client
+
