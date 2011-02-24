@@ -213,7 +213,7 @@ __END__
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
-      %h1{ :id => "pageTitle" }
+      %h2{ :id => "pageTitle" }
       %a{ :id => "backButton", :class => "button", :href => "#" }
     %ul{ :id => "not_found", :title => "Invalid Page" , :selected=> "true" }
       %li 
@@ -230,7 +230,7 @@ __END__
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
-      %h1{ :id => "pageTitle" }
+      %h2{ :id => "pageTitle" }
       %a{ :id => "backButton", :class => "button", :href => "#" }
     %ul{ :id => "quickbase_error", :title => "Program Error" , :selected=> "true" }
       %li 
@@ -247,7 +247,7 @@ __END__
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
-      %h1{ :id => "pageTitle" }
+      %h2{ :id => "pageTitle" }
     %form{ :id => "login_page", :title => "Login", :class => "panel", :selected => "true", :action => "/main_menu", :method => "post", :target => "_self" }
       %fieldset
         .row
@@ -276,7 +276,7 @@ __END__
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
-      %h1{ :id => "pageTitle" } 
+      %h2{ :id => "pageTitle" } 
       %a{ :id => "backButton", :class => "button", :href => "#" }
       %a{ :id => "actionbutton", :class => "button", :href => "/login", :target => "_self" }
         Login
@@ -299,7 +299,7 @@ __END__
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
-      %h1{ :id => "pageTitle" } 
+      %h2{ :id => "pageTitle" } 
       %a{ :id => "backButton", :class => "button", :href => "#" }
       %a{ :id => "actionbutton2", :class => "button", :href => "#{@main_menu_url}", :target => "_self" }
         Main Menu
@@ -317,7 +317,7 @@ __END__
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
-      %h1{ :id => "pageTitle" } 
+      %h2{ :id => "pageTitle" } 
       %a{ :id => "backButton", :class => "button", :href => "#" }
       %a{ :id => "actionbutton", :class => "button", :href => "#{@apps_url}", :target => "_self" }
         Apps
@@ -346,7 +346,7 @@ __END__
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
-      %h1{ :id => "pageTitle" } 
+      %h2{ :id => "pageTitle" } 
       %a{ :id => "backButton", :class => "button", :href => "#" }
         Reports
       %a{ :id => "actionbutton", :class => "button", :href => "#{@tables_url}", :target => "_self" }
@@ -369,7 +369,7 @@ __END__
     %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
   %body<
     .toolbar
-      %h1{ :id => "pageTitle" }
+      %h2{ :id => "pageTitle" }
       %a{ :id => "actionbutton", :class => "button", :href => "/login", :target => "_self" }
         Login
     %ul{ :id => "login_error", :title => "Login Error" , :selected=> "true" }
