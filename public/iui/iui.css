@@ -59,11 +59,11 @@ body > .toolbar {
 .toolbar > h1 {
     position: absolute;
     overflow: hidden;
-    left: 25%;
+    left: 50%;
     margin: 1px 0 0 -75px;
     height: 45px;
     font-size: 12px;
-    width: 200px;
+    width: 300px;
     font-weight: bold;
     text-shadow: rgba(0, 0, 0, 0.4) 0px -1px 0;
     text-align: center;
