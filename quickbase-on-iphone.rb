@@ -401,7 +401,7 @@ __END__
   %li 
     %label<
       QuickBase API library:
-    %a{ :href => 'https://code.intuit.com/sf/wiki/do/viewPage/projects.ipp_dev_kits/wiki/RubyDevKit' } 
+    %a{ :href => 'https://rubygems.org/gems/quickbase_client' } 
       Ruby SDK
   %li 
     %label<
