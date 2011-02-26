@@ -386,30 +386,30 @@ __END__
   %li 
     %label<
       Programming languages:
-    %a{ :href => 'http://www.ruby-lang.org',  : target => "_self" } 
+    %a{ :href => 'http://www.ruby-lang.org',  :target => "_self" } 
       Ruby, Javascript  
   %li 
     %label<
       UI library:
-    %a{ :href => 'http://code.google.com/p/iui',  : target => "_self" } 
+    %a{ :href => 'http://code.google.com/p/iui',  :target => "_self" } 
       iUI
   %li 
     %label<
       Web application framework:
-    %a{ :href => 'http://www.sinatrarb.com',  : target => "_self" } 
+    %a{ :href => 'http://www.sinatrarb.com',  :target => "_self" } 
       Sinatra
   %li 
     %label<
       QuickBase API library:
-    %a{ :href => 'https://rubygems.org/gems/quickbase_client',  : target => "_self" } 
+    %a{ :href => 'https://rubygems.org/gems/quickbase_client',  :target => "_self" } 
       Ruby SDK
   %li 
     %label<
       HTML rendering:
-    %a{ :href => 'http://haml-lang.com',  : target => "_self" } 
+    %a{ :href => 'http://haml-lang.com',  :target => "_self" } 
       Haml
   %li 
     %label<
       Server platform:
-    %a{ :href => 'http://heroku.com',  : target => "_self" } 
+    %a{ :href => 'http://heroku.com',  :target => "_self" } 
       Heroku
