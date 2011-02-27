@@ -1,2 +1,2 @@
-require 'quickbase-on-iphone'
+require './quickbase-on-iphone'
 run Sinatra::Application
