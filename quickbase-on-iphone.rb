@@ -209,7 +209,7 @@ get '/report' do
             alt = !alt  
           }
           @records << "</tr>"
-          @record_details << report_record_details(record_id, record, fieldNames)
+          @record_details << report_record_details(record_id, record, fieldNames, params[:report_name])
           record_id += 1
         }
         @records << "</table></div>"
@@ -226,9 +226,9 @@ get '/report' do
   end  
 end
 
-def report_record_details(record_id, record, fieldNames)
+def report_record_details(record_id, record, fieldNames, report_name)
   @report_record_detail_id = record_id
-  @report_record_detail_title = "Record ##{record_id}"
+  @report_record_detail_title = "#{report_name}: Record ##{record_id}"
   @report_record_detail_fields = ""
   fieldNames.each_index{|i|
     @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{record[fieldNames[i]]}</li>"
