@@ -136,6 +136,7 @@ get '/reports' do
                  end
               }
               @list_of_reports << "</ul>"
+              @action_button_text = "Tables: #{table_name.text}"
               haml :report_list
            end
         else
@@ -380,7 +381,7 @@ __END__
       %h1{ :id => "pageTitle" } 
       %a{ :id => "backButton", :class => "button", :href => "#" }
       %a{ :id => "actionbutton", :class => "button", :href => "#{@tables_url}", :target => "_self" }
-        Tables
+        #{@action_button_text}
     #{@list_of_reports}
 
 @@ report
