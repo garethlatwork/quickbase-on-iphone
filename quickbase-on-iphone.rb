@@ -114,11 +114,50 @@ get '/tables' do
   end  
 end
 
-get '/report' do
+get '/reports' do
   if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
     realm = params[:realm] 
     realm = "www" if realm.nil? or realm.length == 0 
     @tables_url = "'/tables?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{params[:app_dbid]}&app_name=#{params[:app_name]}'"
+    @list_of_reports = ""
+    begin
+      qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
+      if qbc.requestSucceeded
+        qbc.getSchema( params[:table_dbid] )
+        if qbc.requestSucceeded
+           table_name = qbc.getResponseElement( "table/name" )
+           if qbc.queries
+              @list_of_reports << "<ul id=\"reports_for_table_#{params[:table_dbid]}\" title=\"Reports: #{table_name}: #{table_name.text}\" selected=\"true\" >"
+              qbc.queries.each_element_with_attribute( "id" ){|q|
+                 if q.name == "query" 
+                   @list_of_reports << "<li><a href=\"/report?dbid=#{params[:table_dbid]}&qid=#{q.attributes["id"]}&username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_name=#{params[:app_name]}&app_dbid=#{params[:app_dbid]}&table_name=#{table_name.text}&report_name=#{q.elements["qyname"].text}\"  target=\"_self\" >#{q.elements["qyname"].text}</a></li>"
+                 end
+              }
+              @list_of_reports << "</ul>"
+              haml :report_list
+           end
+        else
+          @qbc_error = qbc.lastError
+          haml :quickbase_error
+        end
+      else
+        @qbc_error = qbc.lastError
+        haml :quickbase_error
+      end
+    rescue StandardError => @qbc_error
+      haml :quickbase_error
+    end
+  else
+    redirect '/login'
+  end  
+end  
+
+get '/report' do
+  if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
+    realm = params[:realm] 
+    realm = "www" if realm.nil? or realm.length == 0 
+    #@tables_url = "'/tables?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{params[:app_dbid]}&app_name=#{params[:app_name]}'"
+    @reports_url = "'/reports?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{params[:app_dbid]}&app_name=#{params[:app_name]}&table_dbid=#{params[:dbid]}'"
     begin
       qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
       if qbc.requestSucceeded
@@ -324,6 +363,23 @@ __END__
     #{@list_of_tables}
     #{@list_of_reports}
 
+@@ report_list
+%html<
+  %head< 
+    %title
+      QuickBase on iPhone - Reports
+    %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
+    %style{ :type => "text/css", :media => "screen" } 
+      @import "/iui/iui.css";
+    %script{ :type => "application/x-javascript", :src => "/iui/iui.js"}
+  %body<
+    .toolbar
+      %h1{ :id => "pageTitle" } 
+      %a{ :id => "backButton", :class => "button", :href => "#" }
+      %a{ :id => "actionbutton", :class => "button", :href => "#{@tables_url}", :target => "_self" }
+        Tables
+    #{@list_of_reports}
+
 @@ report
 %html<
   %head< 
@@ -349,8 +405,8 @@ __END__
       %h1{ :id => "pageTitle" } 
       %a{ :id => "backButton", :class => "button", :href => "#" }
         Reports
-      %a{ :id => "actionbutton", :class => "button", :href => "#{@tables_url}", :target => "_self" }
-        Tables
+      %a{ :id => "actionbutton", :class => "button", :href => "#{@reports_url}", :target => "_self" }
+        Reports
     #{@records}
     #{@record_details}
 
