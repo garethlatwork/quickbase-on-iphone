@@ -213,6 +213,7 @@ get '/report' do
           record_id += 1
         }
         @records << "</table></div>"
+        @action_button_text = "Reports: #{params[:table_name]}" 
         haml :report
       else
         @qbc_error = qbc.lastError
@@ -408,7 +409,7 @@ __END__
       %a{ :id => "backButton", :class => "button", :href => "#" }
         Reports
       %a{ :id => "actionbutton", :class => "button", :href => "#{@reports_url}", :target => "_self" }
-        Reports
+        #{@action_button_text}
     #{@records}
     #{@record_details}
 
