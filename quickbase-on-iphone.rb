@@ -173,7 +173,8 @@ get '/report' do
         if clist
            clist.split(/\./).each{|c| fieldNames << qbc.lookupFieldNameFromID(c)}
         else
-          fieldNames = qbc.getFieldNames(params[:dbid])
+          field_ids = qbc.getFieldIDs(params[:dbid])
+          field_ids.each{|field_id| fieldNames << qbc.lookupFieldNameFromID(field_id) unless qbc.isBuiltInField?(field_id)}
         end  
         
         last_index = fieldNames.length-1
