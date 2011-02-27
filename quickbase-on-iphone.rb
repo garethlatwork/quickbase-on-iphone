@@ -333,7 +333,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone - Apps
+      QuickBase on iPhone - Applications
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -344,7 +344,7 @@ __END__
       %a{ :id => "backButton", :class => "button", :href => "#" }
       %a{ :id => "actionbutton2", :class => "button", :href => "#{@main_menu_url}", :target => "_self" }
         Main Menu
-    %ul{ :id => "apps", :title => "Apps", :selected => "true" }
+    %ul{ :id => "apps", :title => "Applications", :selected => "true" }
       #{@list_of_apps}
 
 @@ table_list
