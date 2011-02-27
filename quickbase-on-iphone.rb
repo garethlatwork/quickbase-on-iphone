@@ -2,11 +2,13 @@ require 'sinatra'
 require 'QuickBaseClient'
 require 'haml'
 
+=begin
 configure do
   disable :logging
   $stdout = StringIO.new
   $stderr = StringIO.new
 end
+=end
 
 not_found do
   haml :not_found
