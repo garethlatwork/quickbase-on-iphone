@@ -361,7 +361,7 @@ __END__
       %h1{ :id => "pageTitle" } 
       %a{ :id => "backButton", :class => "button", :href => "#" }
       %a{ :id => "actionbutton", :class => "button", :href => "#{@apps_url}", :target => "_self" }
-        Apps
+        Applications
     #{@list_of_tables}
     #{@list_of_reports}
 
