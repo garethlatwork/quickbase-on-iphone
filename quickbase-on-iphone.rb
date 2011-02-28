@@ -58,7 +58,7 @@ get '/list_apps' do
       if qbc.requestSucceeded
           @list_of_apps = ""
           qbc.grantedDBs(0,0){|db|
-            @list_of_apps << "<li><a href=\"/tables?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{db.dbinfo.dbid}&app_name=#{db.dbinfo.dbname}\" target=\"_self\">#{db.dbinfo.dbname}</a><li>"
+            @list_of_apps << "<li><a href=\"/tables?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{db.dbinfo.dbid}&app_name=#{db.dbinfo.dbname}\" target=\"_self\">#{db.dbinfo.dbname}</a></li>"
           }
          haml :app_list
       else  
