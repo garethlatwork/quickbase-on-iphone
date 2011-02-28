@@ -136,7 +136,7 @@ get '/reports' do
                  end
               }
               @list_of_reports << "</ul>"
-              @action_button_text = "Tables: #{table_name.text}"
+              @action_button_text = "Tables: #{params[:app_name]}"
               haml :report_list
            end
         else
