@@ -473,3 +473,8 @@ __END__
       Server platform:
     %a{ :href => 'http://heroku.com',  :target => "_self" } 
       Heroku
+%li 
+    %label<
+      Source code:
+    %a{ :href => 'https://github.com/garethlatwork/quickbase-on-iphone',  :target => "_self" } 
+      https://github.com/garethlatwork/quickbase-on-iphone
