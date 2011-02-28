@@ -115,7 +115,7 @@ body[orient="landscape"] > .toolbar > h1 {
     left: 6px;
     right: auto;
     padding: 0;
-    max-width: 55px;
+    max-width: 105px;
     border-width: 0 8px 0 14px;
     -webkit-border-image: url(backButton.png) 0 8 0 14;
 }
