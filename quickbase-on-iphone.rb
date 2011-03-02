@@ -229,7 +229,7 @@ get '/report' do
           end  
           fieldNames.each_index{|i|
              if i == 0
-                @records << "#{edit_link}<td class=\"first\"><a href=\"##{record_id}\"> #{record[fieldNames[i]]}</a></td>"
+                @records << "<td>#{edit_link}</td><td class=\"first\"><a href=\"##{record_id}\"> #{record[fieldNames[i]]}</a></td>"
              elsif i == last_index
                 @records << "<td class=\"last\"><a href=\"##{record_id}\">#{record[fieldNames[i]]}</a></td>"
              else  
@@ -238,7 +238,7 @@ get '/report' do
             alt = !alt  
           }
           @records << "</tr>"
-          @record_details << report_record_details(record_id, record, fieldNames, params[:table_name], params[:report_name])
+          @record_details << report_record_details(record_id, record, fieldNames, params[:table_name], params[:report_name],edit_link)
           record_id += 1
         }
         @records << "</table></div>"
@@ -256,7 +256,7 @@ get '/report' do
   end  
 end
 
-def report_record_details(record_id, record, fieldNames, table_name,report_name)
+def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link)
   @report_record_detail_id = record_id
   @report_record_detail_title = "#{table_name}: #{report_name}: Record ##{record_id}"
   @report_record_detail_fields = ""
