@@ -178,17 +178,37 @@ get '/report' do
         
         clist = qbc.getColumnListForQuery(params[:qid], nil)
         fieldNames = []
+        rid_fieldname = "Record ID#"
         if clist
-           clist.split(/\./).each{|c| fieldNames << qbc.lookupFieldNameFromID(c)}
+           rid_done = false
+           clist.split(/\./).each{|c| 
+             if c == "3"
+                rid_fieldname = qbc.lookupFieldNameFromID(c)
+                fieldNames << rid_fieldname
+                rid_done = true 
+             else
+                fieldNames << qbc.lookupFieldNameFromID(c)
+             end
+           }
+           unless rid_done 
+              rid_fieldname = qbc.lookupFieldNameFromID("3")
+              fieldNames << rid_fieldname
+           end
         else
           field_ids = qbc.getFieldIDs(params[:dbid])
-          field_ids.each{|field_id| fieldNames << qbc.lookupFieldNameFromID(field_id) unless qbc.isBuiltInField?(field_id)}
+          field_ids.each{|field_id| 
+            unless qbc.isBuiltInField?(field_id)
+               fieldNames << qbc.lookupFieldNameFromID(field_id) 
+            end
+          }
+          rid_fieldname = qbc.lookupFieldNameFromID("3")
+          fieldNames << rid_fieldname
         end  
         
         last_index = fieldNames.length-1
         fieldNames.each_index{|i| 
            if i == 0
-              @records << "<th class=\"first\">#{fieldNames[i]}</th>"
+              @records << "<th>Edit</th><th class=\"first\">#{fieldNames[i]}</th>"
            elsif i == last_index
               @records << "<th class=\"last\">#{fieldNames[i]}</th>"
            else  
@@ -201,6 +221,7 @@ get '/report' do
         alt = false
         record_id = 1
         records.each{|record|
+          edit_link = "<a href=\"https://#{realm}.quickbase.com/db?a=er&rid=#{record[rid_fieldname]}\">edit</a>"
           if alt
             @records << "<tr class=\"alt\">"
           else
@@ -208,7 +229,7 @@ get '/report' do
           end  
           fieldNames.each_index{|i|
              if i == 0
-                @records << "<td class=\"first\"><a href=\"##{record_id}\"> #{record[fieldNames[i]]}</a></td>"
+                @records << "#{edit_link}<td class=\"first\"><a href=\"##{record_id}\"> #{record[fieldNames[i]]}</a></td>"
              elsif i == last_index
                 @records << "<td class=\"last\"><a href=\"##{record_id}\">#{record[fieldNames[i]]}</a></td>"
              else  
