@@ -259,7 +259,7 @@ end
 def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link)
   @report_record_detail_id = record_id
   @report_record_detail_title = "#{table_name}: #{report_name}: Record ##{record_id}"
-  @report_record_detail_fields = ""
+  @report_record_detail_fields = "<li>#{edit_link}</li>"
   fieldNames.each_index{|i|
     @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{record[fieldNames[i]]}</li>"
   }
