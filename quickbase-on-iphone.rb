@@ -221,7 +221,7 @@ get '/report' do
         alt = false
         record_id = 1
         records.each{|record|
-          edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record[rid_fieldname]}&username=#{params[:username]}&password=#{params[:password]}\">edit</a>"
+          edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record[rid_fieldname]}&username=#{params[:username]}&password=#{params[:password]}\" target=\"_self\">edit</a>"
           if alt
             @records << "<tr class=\"alt\">"
           else
