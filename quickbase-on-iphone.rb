@@ -52,6 +52,7 @@ get '/list_apps' do
   if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
     realm = params[:realm] 
     realm = "www" if realm.nil? or realm.length == 0 
+    @quickbase_url = "(https://#{realm}.quickbase.com)"
     @main_menu_url = "'/main_menu?username=#{params[:username]}&password=#{params[:password]}&realm=#{params[:realm] || "www"}'"
     begin
       qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
@@ -78,6 +79,7 @@ get '/tables' do
     @apps_url = "'/list_apps?username=#{params[:username]}&password=#{params[:password]}&realm=#{params[:realm] || "www"}'"
     @list_of_tables = "<ul id=\"tables_for_app_#{params[:app_dbid]}\" title=\"Tables: #{params[:app_name]}\" selected=\"true\" >"
     @list_of_reports = ""
+    @app_name = "(#{params[:app_name]})"
     begin
       realm = params[:realm] 
       realm = "www" if realm.nil? or realm.length == 0 
@@ -122,12 +124,14 @@ get '/reports' do
     realm = "www" if realm.nil? or realm.length == 0 
     @tables_url = "'/tables?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{params[:app_dbid]}&app_name=#{params[:app_name]}'"
     @list_of_reports = ""
+    @app_name = "(#{params[:app_name]})"
     begin
       qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
       if qbc.requestSucceeded
         qbc.getSchema( params[:table_dbid] )
         if qbc.requestSucceeded
            table_name = qbc.getResponseElement( "table/name" )
+           @table_name = "(#{table_name})"
            if qbc.queries
               @list_of_reports << "<ul id=\"reports_for_table_#{params[:table_dbid]}\" title=\"Reports: #{table_name}: #{table_name.text}\" selected=\"true\" >"
               qbc.queries.each_element_with_attribute( "id" ){|q|
@@ -160,6 +164,9 @@ get '/report' do
     realm = params[:realm] 
     realm = "www" if realm.nil? or realm.length == 0 
     @reports_url = "'/reports?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{params[:app_dbid]}&app_name=#{params[:app_name]}&table_dbid=#{params[:dbid]}'"
+    @app_name = "(#{params[:app_name]})"
+    @table_name = "(#{params[:table_name]})"
+    @report_name = "(#{params[:report_name]})"
     begin
       qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
       if qbc.requestSucceeded
@@ -335,7 +342,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone - Applications
+      QuickBase on iPhone - Applications: #{@quickbase_url}
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -353,7 +360,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone - Tables
+      QuickBase on iPhone - Tables: #{@app_name} 
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -371,7 +378,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone - Reports
+      QuickBase on iPhone - Reports: #{@app_name} - #{@table_name}
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
@@ -388,7 +395,7 @@ __END__
 %html<
   %head< 
     %title
-      QuickBase on iPhone - Report
+      QuickBase on iPhone - Report: #{@app_name} - #{@table_name} #{@report_name}
     %meta{ :name => "viewport", :content => "width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" }
     %style{ :type => "text/css", :media => "screen" } 
       @import "/iui/iui.css";
