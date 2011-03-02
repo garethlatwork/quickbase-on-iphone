@@ -1,0 +1,5 @@
+= quickbase-on-iphone
+
+A web app for viewing QuickBase data.
+
+An instance of the app is running at https://quickbase-on-iphone.heroku.com .
