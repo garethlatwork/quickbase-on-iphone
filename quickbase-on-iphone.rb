@@ -212,7 +212,7 @@ get '/report' do
         last_index = fieldNames.length-1
         fieldNames.each_index{|i| 
            if i == 0
-              @records << "<th>Edit</th><th class=\"first\">#{fieldNames[i]}</th>"
+              @records << "<th></th><th></th><th class=\"first\">#{fieldNames[i]}</th>"
            elsif i == last_index
               @records << "<th class=\"last\">#{fieldNames[i]}</th>"
            else  
@@ -226,6 +226,7 @@ get '/report' do
         record_id = 1
         records.each{|record|
           edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record[rid_fieldname]}&username=#{params[:username]}&password=#{params[:password]}\" target=\"_self\">edit</a>"
+          view_link = "<a href=\"##{record[rid_fieldname]}\">view</a>"
           if alt
             @records << "<tr class=\"alt\">"
           else
@@ -233,11 +234,11 @@ get '/report' do
           end  
           fieldNames.each_index{|i|
              if i == 0
-                @records << "<td>#{edit_link}</td><td class=\"first\"><a href=\"##{record[rid_fieldname]}\"> #{record[fieldNames[i]]}</a></td>"
+                @records << "<td>#{view_link}</td><td>#{edit_link}</td><td class=\"first\">#{record[fieldNames[i]]}</td>"
              elsif i == last_index
-                @records << "<td class=\"last\"><a href=\"##{record[rid_fieldname]}\">#{record[fieldNames[i]]}</a></td>"
+                @records << "<td class=\"last\">#{record[fieldNames[i]]}</td>"
              else  
-                @records << "<td><a href=\"##{record[rid_fieldname]}\">#{record[fieldNames[i]]}</a></td>"
+                @records << "<td>#{record[fieldNames[i]]}</td>"
               end  
             alt = !alt  
           }
