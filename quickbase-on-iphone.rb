@@ -134,7 +134,7 @@ get '/reports' do
            if qbc.queries
               @list_of_reports << "<ul id=\"reports_for_table_#{params[:table_dbid]}\" title=\"Reports: #{table_name.text}\" selected=\"true\" >"
               qbc.queries.each_element_with_attribute( "id" ){|q|
-                 if q.name == "query" 
+                 if q.name == "query" and q.elements["qytype"].text == "table"
                    @list_of_reports << "<li><a href=\"/report?dbid=#{params[:table_dbid]}&qid=#{q.attributes["id"]}&username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_name=#{params[:app_name]}&app_dbid=#{params[:app_dbid]}&table_name=#{table_name.text}&report_name=#{q.elements["qyname"].text}\"  target=\"_self\" >#{q.elements["qyname"].text}</a></li>"
                  end
               }
