@@ -178,6 +178,7 @@ get '/report' do
         
         clist = qbc.getColumnListForQuery(params[:qid], nil)
         fieldNames = []
+        fieldTypes = {}
         rid_fieldname = "Record ID#"
         if clist
            rid_done = false
@@ -185,14 +186,18 @@ get '/report' do
              if c == "3"
                 rid_fieldname = qbc.lookupFieldNameFromID(c)
                 fieldNames << rid_fieldname.dup
+                fieldTypes[rid_fieldname.dup] = ""
                 rid_done = true 
              else
-                fieldNames << qbc.lookupFieldNameFromID(c)
+                fieldName = qbc.lookupFieldNameFromID(c)
+                fieldNames << fieldName.dup
+                fieldTypes[fieldName.dup] = qbc.lookupFieldTypeByName(fieldName)
              end
            }
            unless rid_done 
               rid_fieldname = qbc.lookupFieldNameFromID("3")
               fieldNames << rid_fieldname.dup
+              fieldTypes[rid_fieldname.dup] = ""
               clist << ".3"
            end
         else
@@ -200,13 +205,16 @@ get '/report' do
           field_ids = qbc.getFieldIDs(params[:dbid])
           field_ids.each{|field_id| 
             unless qbc.isBuiltInField?(field_id)
-               fieldNames << qbc.lookupFieldNameFromID(field_id) 
+               fieldName = qbc.lookupFieldNameFromID(field_id)
+               fieldNames << fieldName.dup 
                clist << ".#{field_id}"
+               fieldTypes[fieldName.dup] = qbc.lookupFieldTypeByName(fieldName)
             end
           }
           rid_fieldname = qbc.lookupFieldNameFromID("3")
           clist << ".3"
           fieldNames << rid_fieldname.dup
+          fieldTypes[rid_fieldname.dup] = ""
         end  
         
         last_index = fieldNames.length-1
@@ -233,12 +241,18 @@ get '/report' do
             @records << "<tr class=\"reg\">"
           end  
           fieldNames.each_index{|i|
+             fieldValue = "#{record[fieldNames[i]]}"
+             if fieldTypes[fieldNames[i]] == "url"
+                fieldValue = "<a href=\"#{record[fieldNames[i]]}\">#{record[fieldNames[i]]}</a>"
+             elsif fieldTypes[fieldNames[i]] == "email"
+                fieldValue = "<a href=\"mailto:#{record[fieldNames[i]]}\">#{record[fieldNames[i]]}</a>"
+             end               
              if i == 0
-                @records << "<td>#{view_link}</td><td>#{edit_link}</td><td class=\"first\">#{record[fieldNames[i]]}</td>"
+                @records << "<td>#{view_link}</td><td>#{edit_link}</td><td class=\"first\">#{fieldValue}</td>"
              elsif i == last_index
-                @records << "<td class=\"last\">#{record[fieldNames[i]]}</td>"
+                @records << "<td class=\"last\">#{fieldValue}</td>"
              else  
-                @records << "<td>#{record[fieldNames[i]]}</td>"
+                @records << "<td>#{fieldValue}</td>"
               end  
             alt = !alt  
           }
