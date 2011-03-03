@@ -184,7 +184,7 @@ get '/report' do
            clist.split(/\./).each{|c| 
              if c == "3"
                 rid_fieldname = qbc.lookupFieldNameFromID(c)
-                fieldNames << rid_fieldname
+                fieldNames << rid_fieldname.dup
                 rid_done = true 
              else
                 fieldNames << qbc.lookupFieldNameFromID(c)
@@ -192,7 +192,7 @@ get '/report' do
            }
            unless rid_done 
               rid_fieldname = qbc.lookupFieldNameFromID("3")
-              fieldNames << rid_fieldname
+              fieldNames << rid_fieldname.dup
            end
         else
           field_ids = qbc.getFieldIDs(params[:dbid])
@@ -202,7 +202,7 @@ get '/report' do
             end
           }
           rid_fieldname = qbc.lookupFieldNameFromID("3")
-          fieldNames << rid_fieldname
+          fieldNames << rid_fieldname.dup
         end  
         
         last_index = fieldNames.length-1
