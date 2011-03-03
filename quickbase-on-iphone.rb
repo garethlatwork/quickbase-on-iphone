@@ -286,8 +286,9 @@ def get_field_value(record,fieldNames,i,fieldTypes)
       fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
    elsif fieldType == "checkbox"
       fieldValue = (fieldValue == "1") ? "Yes" : "No"
-   elsif fieldType == "currency" or fieldType == "numeric"
+   elsif ["currency","numeric","rating"].include?(fieldType)
       fieldValue.sub!(".00","")
+      fieldValue.sub!(".0","")
    elsif fieldType == "text" and (fieldValue.start_with?("http://") or fieldValue.start_with?("https://"))
       fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
    end          
