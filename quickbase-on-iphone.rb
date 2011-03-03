@@ -541,3 +541,8 @@ __END__
       Source code:
     %a{ :href => 'https://github.com/garethlatwork/quickbase-on-iphone',  :target => "_self" } 
       https://github.com/garethlatwork/quickbase-on-iphone
+  %li 
+    %label<
+      Expected application token:
+    dby7tm7dnxfdxpd5rhgmxb6cae52
+    
