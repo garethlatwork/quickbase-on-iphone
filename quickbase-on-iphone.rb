@@ -233,16 +233,16 @@ get '/report' do
           end  
           fieldNames.each_index{|i|
              if i == 0
-                @records << "<td>#{edit_link}</td><td class=\"first\"><a href=\"##{record_id}\"> #{record[fieldNames[i]]}</a></td>"
+                @records << "<td>#{edit_link}</td><td class=\"first\"><a href=\"##{record[rid_fieldname]}\"> #{record[fieldNames[i]]}</a></td>"
              elsif i == last_index
-                @records << "<td class=\"last\"><a href=\"##{record_id}\">#{record[fieldNames[i]]}</a></td>"
+                @records << "<td class=\"last\"><a href=\"##{record[rid_fieldname]}\">#{record[fieldNames[i]]}</a></td>"
              else  
-                @records << "<td><a href=\"##{record_id}\">#{record[fieldNames[i]]}</a></td>"
+                @records << "<td><a href=\"##{record[rid_fieldname]}\">#{record[fieldNames[i]]}</a></td>"
               end  
             alt = !alt  
           }
           @records << "</tr>"
-          @record_details << report_record_details(record_id, record, fieldNames, params[:table_name], params[:report_name],edit_link)
+          @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link)
           record_id += 1
         }
         @records << "</table></div>"
