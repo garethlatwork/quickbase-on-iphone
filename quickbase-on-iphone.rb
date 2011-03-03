@@ -243,9 +243,9 @@ get '/report' do
           fieldNames.each_index{|i|
              fieldValue = "#{record[fieldNames[i]]}"
              if fieldTypes[fieldNames[i]] == "url"
-                fieldValue = "<a href=\"#{record[fieldNames[i]]}\">#{record[fieldNames[i]]}</a>"
+                fieldValue = "<a href=\"#{fieldValue}\">#{fieldValue}</a>"
              elsif fieldTypes[fieldNames[i]] == "email"
-                fieldValue = "<a href=\"mailto:#{record[fieldNames[i]]}\">#{record[fieldNames[i]]}</a>"
+                fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
              end               
              if i == 0
                 @records << "<td>#{view_link}</td><td>#{edit_link}</td><td class=\"first\">#{fieldValue}</td>"
