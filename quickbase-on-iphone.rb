@@ -278,6 +278,9 @@ def get_field_value(record,fieldNames,i,fieldTypes)
    fieldType = fieldTypes[fieldNames[i]]
    fieldValue = "#{record[fieldNames[i]]}"
    if fieldType == "url"
+      unless (fieldValue.start_with?("http://") or fieldValue.start_with?("https://"))
+         fieldValue = "http://#{fieldValue}"
+      end
       fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
    elsif fieldType == "email"
       fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
