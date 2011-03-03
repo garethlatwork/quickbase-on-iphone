@@ -52,7 +52,7 @@ get '/list_apps' do
   if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
     realm = params[:realm] || "www"
     @quickbase_url = "https://#{realm}.quickbase.com"
-    @main_menu_url = "'/main_menu?username=#{params[:username]}&password=#{params[:password]}&realm=#{params[:realm] || "www"}'"
+    @main_menu_url = "'/main_menu?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}'"
     begin
       qbc = get_qbc(params,realm)
       if qbc.requestSucceeded
@@ -81,8 +81,6 @@ get '/tables' do
     @list_of_reports = ""
     @app_name = params[:app_name]
     begin
-      realm = params[:realm] 
-      realm = "www" if realm.nil? or realm.length == 0 
       qbc = get_qbc(params,realm)
       if qbc.requestSucceeded
         table_dbids = qbc.getTableIDs(params[:app_dbid])
@@ -231,8 +229,8 @@ get '/report' do
         alt = false
         record_id = 1
         records.each{|record|
-          edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record[rid_fieldname]}&username=#{params[:username]}&password=#{params[:password]}\" target=\"_self\">edit</a>"
-          view_link = "<a href=\"##{record[rid_fieldname]}\">view</a>"
+          edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record[rid_fieldname]}&username=#{params[:username]}&password=#{params[:password]}\" target=\"_self\"><button>edit</button></a>"
+          view_link = "<a href=\"##{record[rid_fieldname]}\"><button>view</button></a>"
           if alt
             @records << "<tr class=\"alt\">"
           else
