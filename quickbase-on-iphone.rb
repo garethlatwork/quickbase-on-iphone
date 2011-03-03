@@ -227,7 +227,6 @@ get '/report' do
         @records << "</tr>"
         records = qbc.getRecordsArray(params[:dbid], fieldNames, nil, params[:qid],nil,clist)
         alt = false
-        record_id = 1
         records.each{|record|
           edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record[rid_fieldname]}&username=#{params[:username]}&password=#{params[:password]}\" target=\"_self\"><button>edit</button></a>"
           view_link = "<a href=\"##{record[rid_fieldname]}\"><button>view</button></a>"
@@ -249,7 +248,6 @@ get '/report' do
           }
           @records << "</tr>"
           @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link,fieldTypes)
-          record_id += 1
         }
         @records << "</table></div>"
         @action_button_text = "Reports: #{params[:table_name]}" 
@@ -277,14 +275,17 @@ def get_qbc(params,realm)
 end
 
 def get_field_value(record,fieldNames,i,fieldTypes)
+   fieldType = fieldTypes[fieldNames[i]]
    fieldValue = "#{record[fieldNames[i]]}"
-   if fieldTypes[fieldNames[i]] == "url"
+   if fieldType == "url"
       fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
-   elsif fieldTypes[fieldNames[i]] == "email"
+   elsif fieldType == "email"
       fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
-   elsif fieldTypes[fieldNames[i]] == "checkbox"
+   elsif fieldType == "checkbox"
       fieldValue = (fieldValue == "1") ? "Yes" : "No"
-   elsif fieldTypes[fieldNames[i]] == "text" and (fieldValue.start_with?("http://") or fieldValue.start_with?("https://"))
+   elsif fieldType == "currency" or fieldType == "numeric"
+      fieldValue.sub!(".00","")
+   elsif fieldType == "text" and (fieldValue.start_with?("http://") or fieldValue.start_with?("https://"))
       fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
    end          
    fieldValue     
