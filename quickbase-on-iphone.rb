@@ -236,7 +236,7 @@ get '/report' do
             @records << "<tr class=\"reg\">"
           end  
           fieldNames.each_index{|i|
-             fieldValue = get_field_value(record,fieldNames,i,fieldTypes)
+             fieldValue = get_field_value(record,fieldNames,i,fieldTypes,qbc)
              if i == 0
                 @records << "<td>#{view_link}</td><td>#{edit_link}</td><td class=\"first\">#{fieldValue}</td>"
              elsif i == last_index
@@ -247,7 +247,7 @@ get '/report' do
             alt = !alt  
           }
           @records << "</tr>"
-          @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link,fieldTypes)
+          @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link,fieldTypes,qbc)
         }
         @records << "</table></div>"
         @action_button_text = "Reports: #{params[:table_name]}" 
@@ -274,7 +274,7 @@ def get_qbc(params,realm)
   qbc = QuickBase::Client.init(qbc_options)
 end
 
-def get_field_value(record,fieldNames,i,fieldTypes)
+def get_field_value(record,fieldNames,i,fieldTypes,qbc)
    fieldType = fieldTypes[fieldNames[i]]
    fieldValue = "#{record[fieldNames[i]]}"
    if fieldType == "url"
@@ -286,6 +286,8 @@ def get_field_value(record,fieldNames,i,fieldTypes)
       fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
    elsif fieldType == "checkbox"
       fieldValue = (fieldValue == "1") ? "Yes" : "No"
+   elsif fieldType == "timeofday"
+      fieldValue = qbc.formatTimeOfDay(fieldValue)
    elsif ["currency","numeric","rating"].include?(fieldType)
       fieldValue.sub!(".00","")
       fieldValue.sub!(".0","")
@@ -295,12 +297,12 @@ def get_field_value(record,fieldNames,i,fieldTypes)
    fieldValue     
 end  
 
-def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link,fieldTypes)
+def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link,fieldTypes,qbc)
   @report_record_detail_id = record_id
   @report_record_detail_title = "#{table_name}: #{report_name}: Record ##{record_id}"
   @report_record_detail_fields = "<li>#{edit_link}</li>"
   fieldNames.each_index{|i|
-    fieldValue = get_field_value(record,fieldNames,i,fieldTypes)
+    fieldValue = get_field_value(record,fieldNames,i,fieldTypes,qbc)
     @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{fieldValue}</li>"
   }
   haml :report_record_detail
