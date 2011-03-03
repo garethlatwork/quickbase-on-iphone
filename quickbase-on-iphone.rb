@@ -241,14 +241,15 @@ get '/report' do
             @records << "<tr class=\"reg\">"
           end  
           fieldNames.each_index{|i|
-             fieldValue = "#{record[fieldNames[i]]}"
-             if fieldTypes[fieldNames[i]] == "url"
-                fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
-             elsif fieldTypes[fieldNames[i]] == "email"
-                fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
-             elsif fieldTypes[fieldNames[i]] == "text" and (fieldValue.start_with?("http://") or fieldValue.start_with?("https://"))
-                fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
-             end               
+             fieldValue = get_field_value(record,fieldNames,i,fieldTypes)
+             #fieldValue = "#{record[fieldNames[i]]}"
+             #if fieldTypes[fieldNames[i]] == "url"
+             #   fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
+             #elsif fieldTypes[fieldNames[i]] == "email"
+             #   fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
+             #elsif fieldTypes[fieldNames[i]] == "text" and (fieldValue.start_with?("http://") or fieldValue.start_with?("https://"))
+             #   fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
+             #end               
              if i == 0
                 @records << "<td>#{view_link}</td><td>#{edit_link}</td><td class=\"first\">#{fieldValue}</td>"
              elsif i == last_index
@@ -259,7 +260,7 @@ get '/report' do
             alt = !alt  
           }
           @records << "</tr>"
-          @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link)
+          @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link,fieldTypes)
           record_id += 1
         }
         @records << "</table></div>"
@@ -277,12 +278,27 @@ get '/report' do
   end  
 end
 
-def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link)
+def get_field_value(record,fieldNames,i,fieldTypes)
+   fieldValue = "#{record[fieldNames[i]]}"
+   if fieldTypes[fieldNames[i]] == "url"
+      fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
+   elsif fieldTypes[fieldNames[i]] == "email"
+      fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
+   elsif fieldTypes[fieldNames[i]] == "checkbox"
+      fieldValue = (fieldValue == "1") ? "Yes" : "No"
+   elsif fieldTypes[fieldNames[i]] == "text" and (fieldValue.start_with?("http://") or fieldValue.start_with?("https://"))
+      fieldValue = "<a href=\"#{fieldValue}\" target=\"_self\">#{fieldValue}</a>"
+   end          
+   fieldValue     
+end  
+
+def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link,fieldTypes)
   @report_record_detail_id = record_id
   @report_record_detail_title = "#{table_name}: #{report_name}: Record ##{record_id}"
   @report_record_detail_fields = "<li>#{edit_link}</li>"
   fieldNames.each_index{|i|
-    @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{record[fieldNames[i]]}</li>"
+    fieldValue = get_field_value(record,fieldNames,i,fieldTypes)
+    @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{fieldValue}</li>"
   }
   haml :report_record_detail
 end  
