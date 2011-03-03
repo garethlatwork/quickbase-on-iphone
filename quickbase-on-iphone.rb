@@ -2,13 +2,13 @@ require 'sinatra'
 require 'QuickBaseClient'
 require 'haml'
 
-#=begin
 configure do
-  disable :logging
-  $stdout = StringIO.new
-  $stderr = StringIO.new
+  if settings.environment == :production
+    disable :logging
+    $stdout = StringIO.new
+    $stderr = StringIO.new
+  end
 end
-#=end
 
 not_found do
   haml :not_found
@@ -193,15 +193,19 @@ get '/report' do
            unless rid_done 
               rid_fieldname = qbc.lookupFieldNameFromID("3")
               fieldNames << rid_fieldname.dup
+              clist << ".3"
            end
         else
+          clist = ""
           field_ids = qbc.getFieldIDs(params[:dbid])
           field_ids.each{|field_id| 
             unless qbc.isBuiltInField?(field_id)
                fieldNames << qbc.lookupFieldNameFromID(field_id) 
+               clist << ".#{field_id}"
             end
           }
           rid_fieldname = qbc.lookupFieldNameFromID("3")
+          clist << ".3"
           fieldNames << rid_fieldname.dup
         end  
         
@@ -217,7 +221,7 @@ get '/report' do
         }
         
         @records << "</tr>"
-        records = qbc.getRecordsArray(params[:dbid], fieldNames, nil, params[:qid])
+        records = qbc.getRecordsArray(params[:dbid], fieldNames, nil, params[:qid],nil,clist)
         alt = false
         record_id = 1
         records.each{|record|
