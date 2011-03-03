@@ -36,7 +36,7 @@ def main_menu(params)
   if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
      realm = params[:realm] || "www"
      @param_url = "username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}"
-     qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm})
+     qbc = get_qbc(params,realm)
      if qbc.requestSucceeded
         @about = haml :about
         haml :main_menu
@@ -50,12 +50,11 @@ end
 
 get '/list_apps' do
   if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
-    realm = params[:realm] 
-    realm = "www" if realm.nil? or realm.length == 0 
+    realm = params[:realm] || "www"
     @quickbase_url = "https://#{realm}.quickbase.com"
     @main_menu_url = "'/main_menu?username=#{params[:username]}&password=#{params[:password]}&realm=#{params[:realm] || "www"}'"
     begin
-      qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
+      qbc = get_qbc(params,realm)
       if qbc.requestSucceeded
           @list_of_apps = ""
           qbc.grantedDBs(0,0){|db|
@@ -76,14 +75,15 @@ end
 
 get '/tables' do
   if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
-    @apps_url = "'/list_apps?username=#{params[:username]}&password=#{params[:password]}&realm=#{params[:realm] || "www"}'"
+    realm = params[:realm] || "www"
+    @apps_url = "'/list_apps?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}'"
     @list_of_tables = "<ul id=\"tables_for_app_#{params[:app_dbid]}\" title=\"Tables: #{params[:app_name]}\" selected=\"true\" >"
     @list_of_reports = ""
     @app_name = params[:app_name]
     begin
       realm = params[:realm] 
       realm = "www" if realm.nil? or realm.length == 0 
-      qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
+      qbc = get_qbc(params,realm)
       if qbc.requestSucceeded
         table_dbids = qbc.getTableIDs(params[:app_dbid])
         if qbc.requestSucceeded
@@ -120,13 +120,12 @@ end
 
 get '/reports' do
   if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
-    realm = params[:realm] 
-    realm = "www" if realm.nil? or realm.length == 0 
+    realm = params[:realm] || "www"
     @tables_url = "'/tables?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{params[:app_dbid]}&app_name=#{params[:app_name]}'"
     @list_of_reports = ""
     @app_name = params[:app_name]
     begin
-      qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
+      qbc = get_qbc(params,realm)
       if qbc.requestSucceeded
         qbc.getSchema( params[:table_dbid] )
         if qbc.requestSucceeded
@@ -161,14 +160,13 @@ end
 
 get '/report' do
   if params[:username] and params[:password] and params[:username].length > 0 and params[:password].length > 0 
-    realm = params[:realm] 
-    realm = "www" if realm.nil? or realm.length == 0 
+    realm = params[:realm] || "www"
     @reports_url = "'/reports?username=#{params[:username]}&password=#{params[:password]}&realm=#{realm}&app_dbid=#{params[:app_dbid]}&app_name=#{params[:app_name]}&table_dbid=#{params[:dbid]}'"
     @app_name = params[:app_name]
     @table_name = params[:table_name]
     @report_name = params[:report_name]
     begin
-      qbc = QuickBase::Client.init({"username" => params[:username], "password" => params[:password], "org" => realm, "cacheSchemas" => true})
+      qbc = get_qbc(params,realm)
       if qbc.requestSucceeded
         @record_details = ""
         @records = "<div id=\"report\" title=\"#{params[:table_name]}: #{params[:report_name]}\" class=\"panel\" selected=\"true\">"
@@ -268,6 +266,16 @@ get '/report' do
   else
     redirect '/login'
   end  
+end
+
+def get_qbc(params,realm)
+  qbc_options = {}
+  qbc_options["username"] = params[:username]
+  qbc_options["password"] = params[:password]
+  qbc_options["org"] = realm
+  qbc_options["cacheSchemas"] = true
+  qbc_options["apptoken"] = "dby7tm7dnxfdxpd5rhgmxb6cae52"
+  qbc = QuickBase::Client.init(qbc_options)
 end
 
 def get_field_value(record,fieldNames,i,fieldTypes)
