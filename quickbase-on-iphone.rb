@@ -175,6 +175,7 @@ get '/report' do
         clist = qbc.getColumnListForQuery(params[:qid], nil)
         fieldNames = []
         fieldTypes = {}
+        fieldIDs = {}
         rid_fieldname = "Record ID#"
         if clist
            rid_done = false
@@ -183,17 +184,20 @@ get '/report' do
                 rid_fieldname = qbc.lookupFieldNameFromID(c)
                 fieldNames << rid_fieldname.dup
                 fieldTypes[rid_fieldname.dup] = ""
+                fieldIDs[rid_fieldname.dup] = "3"
                 rid_done = true 
              else
                 fieldName = qbc.lookupFieldNameFromID(c)
                 fieldNames << fieldName.dup
                 fieldTypes[fieldName.dup] = qbc.lookupFieldTypeByName(fieldName)
+                fieldIDs[fieldName.dup] = c.dup
              end
            }
            unless rid_done 
               rid_fieldname = qbc.lookupFieldNameFromID("3")
               fieldNames << rid_fieldname.dup
               fieldTypes[rid_fieldname.dup] = ""
+              fieldIDs[rid_fieldname.dup] = "3"
               clist << ".3"
            end
         else
@@ -205,12 +209,14 @@ get '/report' do
                fieldNames << fieldName.dup 
                clist << ".#{field_id}"
                fieldTypes[fieldName.dup] = qbc.lookupFieldTypeByName(fieldName)
+               fieldIDs[fieldName.dup] = field_id.dup
             end
           }
           rid_fieldname = qbc.lookupFieldNameFromID("3")
           clist << ".3"
           fieldNames << rid_fieldname.dup
           fieldTypes[rid_fieldname.dup] = ""
+          fieldIDs[rid_fieldname.dup] = "3"
         end  
         
         last_index = fieldNames.length-1
@@ -228,15 +234,16 @@ get '/report' do
         records = qbc.getRecordsArray(params[:dbid], fieldNames, nil, params[:qid],nil,clist)
         alt = false
         records.each{|record|
-          edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record[rid_fieldname]}&username=#{params[:username]}&password=#{params[:password]}\" target=\"_self\"><button>edit</button></a>"
-          view_link = "<a href=\"##{record[rid_fieldname]}\"><button>view</button></a>"
+          record_id = record[rid_fieldname]
+          edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record_id}&username=#{params[:username]}&password=#{params[:password]}\" target=\"_self\"><button>edit</button></a>"
+          view_link = "<a href=\"##{record_id}\"><button>view</button></a>"
           if alt
             @records << "<tr class=\"alt\">"
           else
             @records << "<tr class=\"reg\">"
           end  
           fieldNames.each_index{|i|
-             fieldValue = get_field_value(record,fieldNames,i,fieldTypes,qbc)
+             fieldValue = get_field_value(record,record_id,fieldNames,i,fieldTypes,fieldIDs,qbc)
              if i == 0
                 @records << "<td>#{view_link}</td><td>#{edit_link}</td><td class=\"first\">#{fieldValue}</td>"
              elsif i == last_index
@@ -247,7 +254,7 @@ get '/report' do
             alt = !alt  
           }
           @records << "</tr>"
-          @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link,fieldTypes,qbc)
+          @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link,fieldTypes,fieldIDs,qbc)
         }
         @records << "</table></div>"
         @action_button_text = "Reports: #{params[:table_name]}" 
@@ -274,9 +281,10 @@ def get_qbc(params,realm)
   qbc = QuickBase::Client.init(qbc_options)
 end
 
-def get_field_value(record,fieldNames,i,fieldTypes,qbc)
+def get_field_value(record,record_id,fieldNames,i,fieldTypes,fieldIDs,qbc)
    fieldType = fieldTypes[fieldNames[i]]
    fieldValue = "#{record[fieldNames[i]]}"
+   fieldID = fieldIDs[fieldNames[i]]
    if fieldType == "url"
       unless (fieldValue.start_with?("http://") or fieldValue.start_with?("https://"))
          fieldValue = "http://#{fieldValue}"
@@ -288,6 +296,9 @@ def get_field_value(record,fieldNames,i,fieldTypes,qbc)
       fieldValue = (fieldValue == "1") ? "Yes" : "No"
    elsif fieldType == "timeofday"
       fieldValue = qbc.formatTimeOfDay(fieldValue)
+   elsif fieldType == "file"
+      file_url = "https://#{qbc.org}.quickbase.com/up/#{qbc.dbid}/a/r#{record_id}/e#{fieldID}/v0"
+      fieldValue = "<a href=\"#{file_url}\" target=\"_self\">#{fieldValue}</a>"
    elsif ["currency","numeric","rating"].include?(fieldType)
       fieldValue.sub!(".00","")
       fieldValue.sub!(".0","")
@@ -297,12 +308,12 @@ def get_field_value(record,fieldNames,i,fieldTypes,qbc)
    fieldValue     
 end  
 
-def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link,fieldTypes,qbc)
+def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link,fieldTypes,fieldIDs,qbc)
   @report_record_detail_id = record_id
   @report_record_detail_title = "#{table_name}: #{report_name}: Record ##{record_id}"
   @report_record_detail_fields = "<li>#{edit_link}</li>"
   fieldNames.each_index{|i|
-    fieldValue = get_field_value(record,fieldNames,i,fieldTypes,qbc)
+    fieldValue = get_field_value(record,record_id,fieldNames,i,fieldTypes,fieldIDs,qbc)
     @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{fieldValue}</li>"
   }
   haml :report_record_detail
