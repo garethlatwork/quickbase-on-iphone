@@ -169,9 +169,7 @@ get '/report' do
         @record_details = ""
         @records = "<div id=\"report\" title=\"#{params[:table_name]}: #{params[:report_name]}\" class=\"panel\" selected=\"true\">"
         @records << "<table class=\"itable\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr class=\"header\">"
-        
         qbc.getSchema(params[:dbid])
-        
         clist = qbc.getColumnListForQuery(params[:qid], nil)
         fieldNames = []
         fieldTypes = {}
@@ -254,7 +252,7 @@ get '/report' do
             alt = !alt  
           }
           @records << "</tr>"
-          @record_details << report_record_details(record[rid_fieldname], record, fieldNames, params[:table_name], params[:report_name],edit_link,fieldTypes,fieldIDs,qbc)
+          @record_details << report_record_details(record_id,record,fieldNames,params[:table_name],params[:report_name],edit_link,fieldTypes,fieldIDs,qbc)
         }
         @records << "</table></div>"
         @action_button_text = "Reports: #{params[:table_name]}" 
