@@ -292,8 +292,8 @@ def get_field_value(record,record_id,fieldNames,i,fieldTypes,fieldIDs,qbc)
       fieldValue = "<a href=\"mailto:#{fieldValue}\">#{fieldValue}</a>"
    elsif fieldType == "checkbox"
       fieldValue = (fieldValue == "1") ? "Yes" : "No"
-   elsif fieldType == "timeofday"
-      fieldValue = qbc.formatTimeOfDay(fieldValue)
+   #elsif fieldType == "timeofday"
+   #   fieldValue = qbc.formatTimeOfDay(fieldValue)
    elsif fieldType == "file"
       file_url = "https://#{qbc.org}.quickbase.com/up/#{qbc.dbid}/a/r#{record_id}/e#{fieldID}/v0"
       fieldValue = "<a href=\"#{file_url}\" target=\"_self\">#{fieldValue}</a>"

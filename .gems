@@ -1,5 +1,5 @@
 sinatra
-haml
 httpclient
+haml
 quickbase_client
 
