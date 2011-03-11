@@ -262,10 +262,25 @@ get '/report' do
         
         records = qbc.getRecordsArray(params[:dbid], fieldNames, nil, params[:qid],nil,clist,nil,"structured",query_options)
         alt = false
-        records.each{|record|
+        records.each_index{|i|
+          record = records[i]
           record_id = record[rid_fieldname]
           edit_link = "<a href=\"https://#{realm}.quickbase.com/db/#{params[:dbid]}?a=er&rid=#{record_id}&username=#{params[:username]}&password=#{params[:password]}\" target=\"_self\"><button>edit</button></a>"
           view_link = "<a href=\"##{record_id}\"><button>view</button></a>"
+          
+          if i > 0 and records[i-1] and records[i-1][rid_fieldname]
+             view_previous_link = "<a href=\"##{records[i-1][rid_fieldname]}\"><button>previous</button></a>"
+          else
+             view_previous_link = ""
+          end
+          if records[i+1] and records[i+1][rid_fieldname]
+             view_next_link = "<a href=\"##{records[i+1][rid_fieldname]}\"><button>next (#{i+2}/20)</button></a>"
+          elsif (i+2) < num_records
+             view_next_link = "<a href=\"#{next_request_url}\" target=\"_self\" ><button>next (#{skip+21}-#{(skip+40 > num_records) ? num_records : skip+40})</button></a>"
+          else
+             view_next_link = ""
+          end
+          
           if alt
             @records << "<tr class=\"alt\">"
           else
@@ -283,7 +298,7 @@ get '/report' do
             alt = !alt  
           }
           @records << "</tr>"
-          @record_details << report_record_details(record_id,record,fieldNames,params[:table_name],params[:report_name],edit_link,fieldTypes,fieldIDs,qbc)
+          @record_details << report_record_details(record_id,record,fieldNames,params[:table_name],params[:report_name],edit_link,fieldTypes,fieldIDs,qbc,view_previous_link,view_next_link)
         }
         @records << "</table></div>"
         @action_button_text = "Reports: #{params[:table_name]}" 
@@ -335,10 +350,10 @@ def get_field_value(record,record_id,fieldNames,i,fieldTypes,fieldIDs,qbc)
    fieldValue     
 end  
 
-def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link,fieldTypes,fieldIDs,qbc)
+def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link,fieldTypes,fieldIDs,qbc,view_previous_link,view_next_link)
   @report_record_detail_id = record_id
   @report_record_detail_title = "#{table_name}: #{report_name}: Record ##{record_id}"
-  @report_record_detail_fields = "<li>#{edit_link}</li>"
+  @report_record_detail_fields = "<li>#{view_next_link} #{edit_link}</li>"
   fieldNames.each_index{|i|
     fieldValue = get_field_value(record,record_id,fieldNames,i,fieldTypes,fieldIDs,qbc)
     @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{fieldValue}</li>"
