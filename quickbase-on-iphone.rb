@@ -1,12 +1,14 @@
 require 'sinatra'
 require 'QuickBaseClient'
 require 'haml'
+require 'rack/ssl-enforcer'
 
 configure do
   if settings.environment == :production
     disable :logging
     $stdout = StringIO.new
     $stderr = StringIO.new
+    use Rack::SslEnforcer
   end
 end
 

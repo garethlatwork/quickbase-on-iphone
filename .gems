@@ -1,5 +1,6 @@
 sinatra
 haml
 httpclient
+rack-ssl-enforcer
 quickbase_client
 
