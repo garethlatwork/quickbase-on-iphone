@@ -193,7 +193,7 @@ get '/report' do
         
         @record_details = ""
         @records = "<div id=\"report\" title=\"#{params[:table_name]}: #{params[:report_name]} (#{num_records})\" class=\"panel\" selected=\"true\">"
-        @records << "<button><a href=\"#{previous_request_url}\" target=\"_self\" >Back (#{skip-19}-#{skip-1})</a></button> " if skip > 0
+        @records << "<button><a href=\"#{previous_request_url}\" target=\"_self\" >Back (#{skip-19}-#{skip})</a></button> " if skip > 0
         @records << "<button><a href=\"#{next_request_url}\" target=\"_self\" >Forward (#{skip+21}-#{(skip+40 > num_records) ? num_records : skip+40})</a></button>" if (num_records.to_i-skip) > 20
         @records << "<table class=\"itable\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr class=\"header\">"
         
