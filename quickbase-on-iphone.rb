@@ -176,6 +176,7 @@ get '/report' do
           query_string = query.attributes["qycrit"].dup
         end
         num_records = qbc.doQueryCount(params[:dbid],query_string)
+        num_records = num_records.to_i
         skip = params[:skip] || 0
         skip = skip.to_i
         
