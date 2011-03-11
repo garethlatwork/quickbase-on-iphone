@@ -166,10 +166,34 @@ get '/report' do
     begin
       qbc = get_qbc(params,realm)
       if qbc.requestSucceeded
-        @record_details = ""
-        @records = "<div id=\"report\" title=\"#{params[:table_name]}: #{params[:report_name]}\" class=\"panel\" selected=\"true\">"
-        @records << "<table class=\"itable\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr class=\"header\">"
+        
         qbc.getSchema(params[:dbid])
+        query = qbc.lookupQuery(params[:qid])
+        query_string = "{'0'.CT.''}"
+        if query and query.attributes["qycrit"]
+          query_string = query.attributes["qycrit"].dup
+        end
+        num_records = qbc.doQueryCount(params[:dbid],query_string)
+        skip = params[:skip] || 0
+        skip = skip.to_i
+        
+        previous_request_url = request.url.dup
+        next_request_url = request.url.dup
+        skip_string = previous_request_url.match(/skip=[0-9]+/)
+        skip_string = skip_string.to_s if skip_string
+        if skip_string and skip_string.length > 0
+          previous_request_url.sub!(skip_string,"skip=#{skip-20}") if skip > 0
+          next_request_url.sub!(skip_string,"skip=#{skip+20}")
+        else  
+          next_request_url << "&skip=20"
+        end  
+        
+        @record_details = ""
+        @records = "<div id=\"report\" title=\"#{params[:table_name]}: #{params[:report_name]} (#{num_records})\" class=\"panel\" selected=\"true\">"
+        @records << "<button><a href=\"#{previous_request_url}\" target=\"_self\" >Previous 20 Records</a></button> " if skip > 0
+        @records << "<button><a href=\"#{next_request_url}\" target=\"_self\" >Next 20 Records</a></button>" if (num_records.to_i-skip) > 20
+        @records << "<table class=\"itable\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr class=\"header\">"
+        
         clist = qbc.getColumnListForQuery(params[:qid], nil)
         fieldNames = []
         fieldTypes = {}
@@ -229,7 +253,11 @@ get '/report' do
         }
         
         @records << "</tr>"
-        records = qbc.getRecordsArray(params[:dbid], fieldNames, nil, params[:qid],nil,clist)
+        
+        query_options = "num-20"
+        query_options << ".skp-#{skip}" if skip > 0
+        
+        records = qbc.getRecordsArray(params[:dbid], fieldNames, nil, params[:qid],nil,clist,nil,"structured",query_options)
         alt = false
         records.each{|record|
           record_id = record[rid_fieldname]
