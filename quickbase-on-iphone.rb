@@ -269,13 +269,15 @@ get '/report' do
           view_link = "<a href=\"##{record_id}\"><button>view</button></a>"
           
           if i > 0 and records[i-1] and records[i-1][rid_fieldname]
-             view_previous_link = "<a href=\"##{records[i-1][rid_fieldname]}\"><button>previous</button></a>"
+             view_previous_link = "<a href=\"##{records[i-1][rid_fieldname]}\"><button>previous (#{i}/#{records.length})</button></a>"
+          elsif skip > 0
+             view_previous_link = "<a href=\"#{previous_request_url}\" target=\"_self\" ><button>previous (#{skip-19}-#{skip})</button></a>"
           else
              view_previous_link = ""
           end
           if records[i+1] and records[i+1][rid_fieldname]
-             view_next_link = "<a href=\"##{records[i+1][rid_fieldname]}\"><button>next (#{i+2}/20)</button></a>"
-          elsif (i+2) < num_records
+             view_next_link = "<a href=\"##{records[i+1][rid_fieldname]}\"><button>next (#{i+2}/#{records.length})</button></a>"
+          elsif (skip+21) < num_records
              view_next_link = "<a href=\"#{next_request_url}\" target=\"_self\" ><button>next (#{skip+21}-#{(skip+40 > num_records) ? num_records : skip+40})</button></a>"
           else
              view_next_link = ""
@@ -353,7 +355,7 @@ end
 def report_record_details(record_id, record, fieldNames, table_name,report_name,edit_link,fieldTypes,fieldIDs,qbc,view_previous_link,view_next_link)
   @report_record_detail_id = record_id
   @report_record_detail_title = "#{table_name}: #{report_name}: Record ##{record_id}"
-  @report_record_detail_fields = "<li>#{view_next_link} #{edit_link}</li>"
+  @report_record_detail_fields = "<li>#{view_previous_link} #{view_next_link} #{edit_link}</li>"
   fieldNames.each_index{|i|
     fieldValue = get_field_value(record,record_id,fieldNames,i,fieldTypes,fieldIDs,qbc)
     @report_record_detail_fields << "<li><label>#{fieldNames[i]}: </label>#{fieldValue}</li>"
